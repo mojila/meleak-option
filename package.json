@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rm -rf ../chrome/popup && mv build ../chrome/popup",
+    "build": "react-scripts build && rm -rf ../chrome/option && mv build ../chrome/option",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
