@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Switch, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Home from './pages/home';
@@ -14,11 +14,13 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline>
-        <BrowserRouter>
+        <HashRouter
+          basename="/"
+        >
           <Switch>
             {Routes().map((route) => <Route exact component={route.component} path={route.path} />)}
           </Switch>
-        </BrowserRouter>
+        </HashRouter>
       </CssBaseline>
     </React.Fragment>
   );
