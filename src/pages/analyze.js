@@ -1,10 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
-import { Container, Typography, Grid } from '@material-ui/core'
+import { Container } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import MiniDrawer from '../components/miniDrawer'
-import CurrentStats from '../components/currentStats'
-import WebAppInfo from '../components/webAppInfo'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,22 +21,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Home() {
+export default function Analyze() {
   const classes = useStyles();
-  const title = "Dashboard"
+  const title = "Analyze"
 
   return <Container disableGutters fixed className={classes.root}>
     <MiniDrawer isOpen={true} title={title} />
     <main className={classes.content}>
       <div className={classes.toolbar} />
-      <Grid container spacing={2}>
-        <Grid item md={6}>
-          <WebAppInfo />
-        </Grid>
-        <Grid item md={6}>
-          <CurrentStats />
-        </Grid>
-      </Grid>
+      {/* content */}
+      <div>blank</div>
     </main>
   </Container>
 }

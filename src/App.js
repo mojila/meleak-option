@@ -4,9 +4,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Home from './pages/home';
 import About from './pages/about';
+import Analyze from './pages/analyze';
 
 const Routes = () => ([
   { component: Home, path: '/' },
+  { component: Analyze, path: '/analyze' },
   { component: About, path: '/about' },
 ])
 
@@ -18,7 +20,7 @@ function App() {
           basename="/"
         >
           <Switch>
-            {Routes().map((route) => <Route exact component={route.component} path={route.path} />)}
+            {Routes().map((route, index) => <Route exact key={index} component={route.component} path={route.path} />)}
           </Switch>
         </HashRouter>
       </CssBaseline>

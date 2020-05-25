@@ -15,6 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import InfoIcon from '@material-ui/icons/Info';
 import { useHistory } from 'react-router-dom'
 
@@ -69,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Menu = [
   { name: 'Dashboard', path: '/', icon: <DashboardIcon /> },
+  { name: 'Analyze', path: '/analyze', icon: <TimelineIcon /> },
   { name: 'About', path: '/about', icon: <InfoIcon /> },
 ]
 
@@ -135,7 +137,8 @@ export default function MiniDrawer({ isOpen, title }) {
         </div>
         <Divider />
         <List>
-          {Menu.map((menu) => <ListItem 
+          {Menu.map((menu, index) => <ListItem
+            key={index} 
             button 
             onClick={() => goTo(menu.path)}>
             <ListItemIcon>{menu.icon}</ListItemIcon>
