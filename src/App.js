@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Provider, Reducers, Stores, Actions } from './context';
 
 import Home from './pages/home';
 import About from './pages/about';
@@ -13,8 +14,23 @@ const Routes = () => ([
 ])
 
 function App() {
+  const [store, dispatch] = useReducer(Reducers, Stores)
+
+  const loadPages = async () => {
+    let key = 'https://www.tokopedia.com/-pages'
+    let pages = await localStorage.getItem(key)
+
+    if (pages) {
+      dispatch({ type: Actions.UPDATE_PAGES, payload: { pages: JSON.parse(pages) } })
+    }
+  }
+
+  useEffect(() => {
+    loadPages()
+  }, [])
+
   return (
-    <React.Fragment>
+    <Provider value={{ store, dispatch }}>
       <CssBaseline>
         <HashRouter
           basename="/"
@@ -24,7 +40,7 @@ function App() {
           </Switch>
         </HashRouter>
       </CssBaseline>
-    </React.Fragment>
+    </Provider>
   );
 }
 

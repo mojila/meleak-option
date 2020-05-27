@@ -1,11 +1,18 @@
-import React from 'react'
-import { Container } from '@material-ui/core'
+import React, { useContext } from 'react'
+import { Container, Card, CardContent, Grid, Typography, CardActions, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import MiniDrawer from '../components/miniDrawer'
+import Context from '../context'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+  },
+  card: {
+    title: {
+      fontSize: 14
+    },
+    minWidth: 275,
   },
   content: {
     flexGrow: 1,
@@ -22,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Analyze() {
+  const { store } = useContext(Context)
   const classes = useStyles();
   const title = "Analyze"
 
@@ -30,7 +38,24 @@ export default function Analyze() {
     <main className={classes.content}>
       <div className={classes.toolbar} />
       {/* content */}
-      <div>blank</div>
+      <Grid container spacing={2}>
+        {store.pages.map((d, i) => <Grid key={i} item md={3}>
+          <Card className={classes.card}>
+            <CardContent>
+              <Typography className={classes.card.title} color="textSecondary" gutterBottom>
+                Page URL
+              </Typography>
+              <Typography>
+                {new URL(d).pathname}
+              </Typography>
+              <Typography variant="body2" component="p"></Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Details</Button>
+            </CardActions>
+          </Card>
+        </Grid>)}
+      </Grid>
     </main>
   </Container>
 }
