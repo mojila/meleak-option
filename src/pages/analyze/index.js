@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { Container, Card, CardContent, Grid, Typography, CardActions, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import MiniDrawer from '../components/miniDrawer'
-import Context from '../context'
+import { useHistory } from 'react-router-dom'
+import MiniDrawer from '../../components/miniDrawer'
+import Context from '../../context'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,8 +31,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Analyze() {
   const { store } = useContext(Context)
+  const history = useHistory()
   const classes = useStyles();
   const title = "Analyze"
+
+  const toDetail = (index) => {
+    return history.push(`/analyze/${index}`)
+  }
 
   return <Container disableGutters fixed className={classes.root}>
     <MiniDrawer isOpen={true} title={title} />
@@ -51,7 +57,7 @@ export default function Analyze() {
               <Typography variant="body2" component="p"></Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Details</Button>
+              <Button size="small" onClick={() => toDetail(i)}>Details</Button>
             </CardActions>
           </Card>
         </Grid>)}

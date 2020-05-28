@@ -1,5 +1,10 @@
 const stores = {
-  pages: []
+  pages: [],
+  active: '',
+  info: {
+    title: '',
+    url: ''
+  }
 }
 
 export default stores

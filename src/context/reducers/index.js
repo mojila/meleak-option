@@ -8,6 +8,16 @@ const Reducer = (state = stores, action) => {
         ...state,
         pages: action.payload.pages
       }
+    case actions.UPDATE_ACTIVE:
+      return {
+        ...state,
+        active: action.payload.active
+      }
+    case actions.UPDATE_INFO:
+      return {
+        ...state,
+        info: action.payload.info
+      }
     default:
       return state
   }

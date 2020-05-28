@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Context from '../context';
 
 const useStyles = makeStyles({
   root: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles({
 
 export default function WebAppInfo() {
   const classes = useStyles();
+  const { store } = useContext(Context)
 
   return (
     <Card className={classes.root}>
@@ -33,17 +35,17 @@ export default function WebAppInfo() {
           Web Apps Information
         </Typography>
         <Typography variant="h5" component="h2">
-          Tokopedia
+          {store.info.title}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          https://www.tokopedia.com
+          {store.info.url}
         </Typography>
         <Typography variant="body2" component="p">
           
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Go to app</Button>
+        <Button size="small" component="a" href={store.info.url} target="_blank">Go to app</Button>
       </CardActions>
     </Card>
   );
