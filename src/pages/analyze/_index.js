@@ -62,18 +62,7 @@ export default function DetailAnalyze() {
         id: "memory-leak"
       }
     },
-    series: [
-      {
-        type: "line",
-        name: 'Heap Usage',
-        data: [30, 40, 45, 50, 49, 60, 70, 91],
-      },
-      {
-        type: 'line',
-        name: "Leak Event",
-        data: [30, 100, 45, 50, 49, 60, 70, 91]
-      }
-    ]
+    series: []
   })
 
   const goBack = () => history.push('/analyze')
@@ -108,21 +97,49 @@ export default function DetailAnalyze() {
       options: {
         chart: {
           id: "memory-leak"
-        }
-      },
-      markers: {
-        size: [0, 7]
-      },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: memoryLeak[0].y,
+              y2: memoryLeak[memoryLeak.length - 1].y,
+              borderColor: '#000',
+              fillColor: '#FEB019',
+              label: {
+                text: 'Memory Leak'
+              }
+            }
+          ],
+          xaxis: [
+            {
+              x: memoryLeak[0].x,
+              x2: memoryLeak[memoryLeak.length - 1].x,
+              fillColor: '#FEB019',
+              opacity: 0.4,
+              label: {
+                borderColor: '#B3F7CA',
+                style: {
+                  fontSize: '10px',
+                  color: '#fff',
+                  background: '#00E396',
+                }
+              },
+              text: 'Memory Leak Event Range',
+            }
+          ]
+        },
+      }, 
       series: [
         {
           type: "area",
           name: 'Heap Usage',
           data: heapData,
-        },
-        {
-          type: 'line',
-          name: "Leak Event",
-          data: memoryLeak
         }
       ]
     })
@@ -188,6 +205,7 @@ export default function DetailAnalyze() {
                       {formatTime(selected)}
                     </Typography>
                     <Chart
+                      type="area"
                       options={chartOptions.options}
                       series={chartOptions.series}
                     />
