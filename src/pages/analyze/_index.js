@@ -6,6 +6,7 @@ import MiniDrawer from '../../components/miniDrawer'
 import Context, { Actions } from '../../context'
 import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
+import Chart from "react-apexcharts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +56,25 @@ export default function DetailAnalyze() {
   const history = useHistory()
   const classes = useStyles();
   const title = "Analyze"
+  const [chartOptions, setChartOptions] = useState({
+    options: {
+      chart: {
+        id: "memory-leak"
+      }
+    },
+    series: [
+      {
+        type: "line",
+        name: 'Heap Usage',
+        data: [30, 40, 45, 50, 49, 60, 70, 91],
+      },
+      {
+        type: 'line',
+        name: "Leak Event",
+        data: [30, 100, 45, 50, 49, 60, 70, 91]
+      }
+    ]
+  })
 
   const goBack = () => history.push('/analyze')
 
@@ -77,7 +97,35 @@ export default function DetailAnalyze() {
   }
 
   const onSelectItem = (item) => {
-    return setSelected(item)
+    setSelected(item)
+
+    let heapData = item.heapData.map((d) => ({ x: moment(d.time).format('HH:mm:ss.S'), y: d.heap }))
+    let memoryLeak = item.memoryLeak.map((d) => ({ x: moment(d.time).format('HH:mm:ss.S'), y: d.heap }))
+
+    console.log(heapData, memoryLeak)
+
+    return setChartOptions({
+      options: {
+        chart: {
+          id: "memory-leak"
+        }
+      },
+      markers: {
+        size: [0, 7]
+      },
+      series: [
+        {
+          type: "area",
+          name: 'Heap Usage',
+          data: heapData,
+        },
+        {
+          type: 'line',
+          name: "Leak Event",
+          data: memoryLeak
+        }
+      ]
+    })
   }
 
   useEffect(() => {
@@ -139,6 +187,10 @@ export default function DetailAnalyze() {
                     <Typography>
                       {formatTime(selected)}
                     </Typography>
+                    <Chart
+                      options={chartOptions.options}
+                      series={chartOptions.series}
+                    />
                   </CardContent>
                 </Card>
               : <Card>
