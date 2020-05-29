@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react'
-import { Container, Card, CardContent, Grid, Typography, CardActions, Button } from '@material-ui/core'
+import { Container, Card, CardContent, Grid, Typography, CardActions, Button, ListItem, ListItemText, List, ListSubheader } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import MiniDrawer from '../../components/miniDrawer'
-import Context from '../../context'
+import Context, { Actions } from '../../context'
 import { useParams, useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,12 +29,29 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  rootList: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+    position: 'relative',
+    overflow: 'auto',
+    maxHeight: 300,
+  },
+  listSection: {
+    backgroundColor: 'inherit',
+  },
+  ul: {
+    backgroundColor: 'inherit',
+    padding: 0,
+  },
 }))
 
 export default function DetailAnalyze() {
   const { index } = useParams()
-  const { store } = useContext(Context)
+  const { store, dispatch } = useContext(Context)
   const [leaks, setLeaks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [selected, setSelected] = useState('')
   const history = useHistory()
   const classes = useStyles();
   const title = "Analyze"
@@ -47,6 +65,19 @@ export default function DetailAnalyze() {
     if (data) {
       setLeaks(JSON.parse(data))
     }
+
+    setLoading(false)
+  }
+
+  const formatTime = (item) => {
+    let start = moment(item.memoryLeak[0].time).format('DD/MM/YYYY HH:mm:ss')
+    let stop = moment(item.memoryLeak[item.memoryLeak.length - 1].time).format('HH:mm:ss')
+
+    return `${start} - ${stop}`
+  }
+
+  const onSelectItem = (item) => {
+    return setSelected(item)
   }
 
   useEffect(() => {
@@ -56,53 +87,70 @@ export default function DetailAnalyze() {
 
   return <Container disableGutters fixed className={classes.root}>
     <MiniDrawer isOpen={true} title={title} />
-    <main className={classes.content}>
-      <div className={classes.toolbar} />
-      {/* content */}
-      <Grid container spacing={2}>
-        <Grid item md={3}>
-          <Button variant="text" onClick={goBack}>Back</Button>
+    { !loading && <main className={classes.content}>
+        <div className={classes.toolbar} />
+        {/* content */}
+        <Grid container spacing={2}>
+          <Grid item md={3}>
+            <Button variant="text" onClick={goBack}>Back</Button>
+          </Grid>
+          <Grid item md={9} />
+          <Grid item md={6}>
+            <Card>
+              <CardContent>
+                <Typography color="textSecondary">
+                  Application Page
+                </Typography>
+                <Typography variant="subtitle1">
+                  {store.pages[index]}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={6}>
+            <Card>
+              <CardContent>
+                <Typography color="textSecondary">
+                  Memory Leak Detected
+                </Typography>
+                <Typography variant="subtitle1">
+                  {leaks.length}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={3}>
+            <Card>
+              <CardContent>
+              <List className={classes.rootList} subheader={<li />}>
+                {leaks.map((item, i) => (
+                  <ListItem button key={i} onClick={() => onSelectItem(item)}>
+                    <ListItemText secondary={formatTime(item)} />
+                  </ListItem>
+                ))}
+              </List>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={9}>
+            {selected 
+              ? <Card>
+                  <CardContent>
+                    <Typography>
+                      {formatTime(selected)}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              : <Card>
+                  <CardContent>
+                    <Typography>
+                      Select Memory Leak Event
+                    </Typography>
+                  </CardContent>
+                </Card>}
+          </Grid>
         </Grid>
-        <Grid item md={9} />
-        <Grid item md={6}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary">
-                Application Page
-              </Typography>
-              <Typography variant="subtitle1">
-                {store.pages[index]}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item md={6}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary">
-                Memory Leak Detected
-              </Typography>
-              <Typography variant="subtitle1">
-                {leaks.length}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item md={3}>
-          <Card>
-            <CardContent>
-              list
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item md={9}>
-          <Card>
-            <CardContent>
-              visualize
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </main>
-  </Container>
+      </main>
+    }
+    </Container>
 }
