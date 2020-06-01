@@ -46,7 +46,7 @@ export default function Analyze() {
       {/* content */}
       <Grid container spacing={2}>
         {store.pages.map((d, i) => <Grid key={i} item md={3}>
-          <Card className={classes.card}>
+          <Card>
             <CardContent>
               <Typography className={classes.card.title} color="textSecondary" gutterBottom>
                 Page URL
