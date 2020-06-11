@@ -7,6 +7,7 @@ import Context, { Actions } from '../../context'
 import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import Chart from "react-apexcharts";
+import AceEditor from "react-ace";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +54,7 @@ export default function DetailAnalyze() {
   const [leaks, setLeaks] = useState([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState('')
+  const [scripts, setScripts] = useState([])
   const history = useHistory()
   const classes = useStyles();
   const title = "Analyze"
@@ -74,6 +76,8 @@ export default function DetailAnalyze() {
     if (data) {
       setLeaks(JSON.parse(data))
     }
+
+    await loadScripts()
 
     setLoading(false)
   }
@@ -143,6 +147,19 @@ export default function DetailAnalyze() {
         }
       ]
     })
+  }
+
+  const loadScripts = async () => {
+    try {
+      let key = `${store.pages[index]}-scripts`
+      let scripts = await localStorage.getItem(key)
+
+      if (scripts) {
+        setScripts(JSON.parse(scripts))
+      }
+    } catch(e) {
+      console.warn(e)
+    }
   }
 
   useEffect(() => {
@@ -218,6 +235,26 @@ export default function DetailAnalyze() {
                     </Typography>
                   </CardContent>
                 </Card>}
+          </Grid>
+          <Grid item md={12}>
+            <Card>
+              <CardContent>
+                { scripts.map((d, i) => <div>
+                  <Typography>
+                    Code #{i+1} Review
+                  </Typography>
+                  <AceEditor
+                    mode="javascript"
+                    theme="theme-terminal"
+                    width="900px"
+                    height="300px"
+                    name="UNIQUE_ID_OF_DIV"
+                    value={d}
+                    editorProps={{ $blockScrolling: true }}
+                  />
+                </div>) }
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </main>
