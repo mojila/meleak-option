@@ -8,6 +8,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import Chart from "react-apexcharts";
 import AceEditor from "react-ace";
+import { js_beautify } from 'js-beautify'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +69,21 @@ export default function DetailAnalyze() {
   })
 
   const goBack = () => history.push('/analyze')
+
+  const loadScripts = async () => {
+    try {
+      let key = `${store.pages[index]}-scripts`
+      let scripts = await localStorage.getItem(key)
+
+      if (scripts) {
+        let toObject = JSON.parse(scripts)
+        toObject = await toObject.map((d) => js_beautify(d))
+        setScripts(toObject)
+      }
+    } catch(e) {
+      console.warn(e)
+    }
+  }
 
   const loadLeaks = async () => {
     let leakKey = `${store.pages[index]}-leak`
@@ -147,19 +163,6 @@ export default function DetailAnalyze() {
         }
       ]
     })
-  }
-
-  const loadScripts = async () => {
-    try {
-      let key = `${store.pages[index]}-scripts`
-      let scripts = await localStorage.getItem(key)
-
-      if (scripts) {
-        setScripts(JSON.parse(scripts))
-      }
-    } catch(e) {
-      console.warn(e)
-    }
   }
 
   useEffect(() => {
