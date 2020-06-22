@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react'
-import { Container, Card, CardContent, Grid, Typography, CardActions, Button, ListItem, ListItemText, List, ListSubheader } from '@material-ui/core'
+import { Container, Card, CardContent, Grid, Typography, CardActions, Button, ListItem, ListItemText, List, ListSubheader, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import MiniDrawer from '../../components/miniDrawer'
 import Context, { Actions } from '../../context'
@@ -242,10 +242,17 @@ export default function DetailAnalyze() {
           <Grid item md={12}>
             <Card>
               <CardContent>
-                { scripts.map((d, i) => <div>
-                  <Typography>
-                    Code #{i+1} Review
-                  </Typography>
+                { scripts.map((d, i) => <div key={i}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Box>
+                      <Typography>
+                        Code #{i+1} Review
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Button variant="outlined">Analyze</Button>
+                    </Box>
+                  </Box>
                   <AceEditor
                     mode="javascript"
                     theme="theme-terminal"

@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Context from '../context';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -34,6 +35,7 @@ export default function WebAppInfo() {
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           Web Apps Information
         </Typography>
+        {store.info.icon && <Avatar alt={store.info.title} src={store.info.icon} />}
         <Typography variant="h5" component="h2">
           {store.info.title}
         </Typography>

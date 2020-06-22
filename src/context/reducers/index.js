@@ -18,6 +18,11 @@ const Reducer = (state = stores, action) => {
         ...state,
         info: action.payload.info
       }
+    case actions.UPDATE_LEAKS:
+      return {
+        ...state,
+        leaks: action.payload.leaks
+      }
     default:
       return state
   }

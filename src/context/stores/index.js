@@ -4,7 +4,8 @@ const stores = {
   info: {
     title: '',
     url: ''
-  }
+  },
+  leaks: []
 }
 
 export default stores

@@ -19,12 +19,12 @@ function App() {
   const [store, dispatch] = useReducer(Reducers, Stores)
 
   const loadPages = async () => {
-    let active = await localStorage.getItem('meleak-active')
+    let active = localStorage.getItem('meleak-active')
     if (active) {
       await dispatch({ type: Actions.UPDATE_ACTIVE, payload: { active: active } })
       // load info
       let infoKey = `${active}-info`
-      let info = await localStorage.getItem(infoKey)
+      let info = localStorage.getItem(infoKey)
 
       if (info) {
         dispatch({ type: Actions.UPDATE_INFO, payload: { info: JSON.parse(info) } })
@@ -32,10 +32,20 @@ function App() {
 
       // load pages
       let pagesKey = `${active}-pages`
-      let pages = await localStorage.getItem(pagesKey)
+      let pages = localStorage.getItem(pagesKey)
 
       if (pages) {
-        dispatch({ type: Actions.UPDATE_PAGES, payload: { pages: JSON.parse(pages) } })
+        await dispatch({ type: Actions.UPDATE_PAGES, payload: { pages: JSON.parse(pages) } })
+        let pagesJSON = JSON.parse(pages)
+        let memoryLeaks = pagesJSON.map((d) => {
+          let leaksKey = `${d}-leak`
+          let leaks = localStorage.getItem(leaksKey)
+
+          if (leaks) return JSON.parse(leaks)
+
+          return []
+        }).filter((x) => x).flat()
+        await dispatch({ type: Actions.UPDATE_LEAKS, payload: { leaks: memoryLeaks } })
       }
     }
   }
