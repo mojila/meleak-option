@@ -51,11 +51,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DetailAnalyze() {
   const { index } = useParams()
-  const { store, dispatch } = useContext(Context)
-  const [leaks, setLeaks] = useState([])
+  const { store } = useContext(Context)
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState('')
-  const [scripts, setScripts] = useState([])
   const history = useHistory()
   const classes = useStyles();
   const title = "Analyze"
@@ -69,33 +67,24 @@ export default function DetailAnalyze() {
   })
 
   const goBack = () => history.push('/analyze')
+  const pageUrl = () => store.pages[index]
+  const totalLeaks = () => {
+    let pageLeaks = store.page_leaks.filter(x => x.page === pageUrl())[0]
+    if (pageLeaks) return pageLeaks.leaks.length
 
-  const loadScripts = async () => {
-    try {
-      let key = `${store.pages[index]}-scripts`
-      let scripts = await localStorage.getItem(key)
-
-      if (scripts) {
-        let toObject = JSON.parse(scripts)
-        toObject = await toObject.map((d) => js_beautify(d))
-        setScripts(toObject)
-      }
-    } catch(e) {
-      console.warn(e)
-    }
+    return 0
   }
+  const getLeaks = () => {
+    let pageLeaks = store.page_leaks.filter(x => x.page === pageUrl())[0]
+    if (pageLeaks) return pageLeaks.leaks
 
-  const loadLeaks = async () => {
-    let leakKey = `${store.pages[index]}-leak`
-    let data = await localStorage.getItem(leakKey)
+    return []
+  }
+  const getScripts = () => {
+    let pageScripts = store.page_scripts.filter(x => x.page === pageUrl())[0]
+    if (pageScripts) return pageScripts.scripts
 
-    if (data) {
-      setLeaks(JSON.parse(data))
-    }
-
-    await loadScripts()
-
-    setLoading(false)
+    return []
   }
 
   const formatTime = (item) => {
@@ -110,8 +99,6 @@ export default function DetailAnalyze() {
 
     let heapData = item.heapData.map((d) => ({ x: moment(d.time).format('HH:mm:ss.S'), y: d.heap }))
     let memoryLeak = item.memoryLeak.map((d) => ({ x: moment(d.time).format('HH:mm:ss.S'), y: d.heap }))
-
-    console.log(heapData, memoryLeak)
 
     return setChartOptions({
       options: {
@@ -166,7 +153,8 @@ export default function DetailAnalyze() {
   }
 
   useEffect(() => {
-    loadLeaks()
+    // loadLeaks()
+    setLoading(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -187,7 +175,7 @@ export default function DetailAnalyze() {
                   Application Page
                 </Typography>
                 <Typography variant="subtitle1">
-                  {store.pages[index]}
+                  {pageUrl()}
                 </Typography>
               </CardContent>
             </Card>
@@ -199,7 +187,7 @@ export default function DetailAnalyze() {
                   Memory Leak Detected
                 </Typography>
                 <Typography variant="subtitle1">
-                  {leaks.length}
+                  {totalLeaks()}
                 </Typography>
               </CardContent>
             </Card>
@@ -208,7 +196,7 @@ export default function DetailAnalyze() {
             <Card>
               <CardContent>
               <List className={classes.rootList} subheader={<li />}>
-                {leaks.map((item, i) => (
+                {getLeaks().map((item, i) => (
                   <ListItem button key={i} onClick={() => onSelectItem(item)}>
                     <ListItemText secondary={formatTime(item)} />
                   </ListItem>
@@ -237,12 +225,12 @@ export default function DetailAnalyze() {
                       Select Memory Leak Event
                     </Typography>
                   </CardContent>
-                </Card>}
+                </Card>}  
           </Grid>
           <Grid item md={12}>
             <Card>
               <CardContent>
-                { scripts.map((d, i) => <div key={i}>
+                { getScripts().map((d, i) => <div key={i}>
                   <Box display="flex" justifyContent="space-between">
                     <Box>
                       <Typography>

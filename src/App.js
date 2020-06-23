@@ -37,15 +37,34 @@ function App() {
       if (pages) {
         await dispatch({ type: Actions.UPDATE_PAGES, payload: { pages: JSON.parse(pages) } })
         let pagesJSON = JSON.parse(pages)
+        let pageLeaks = []
+        let pageScripts = []
         let memoryLeaks = pagesJSON.map((d) => {
           let leaksKey = `${d}-leak`
+          let scriptsKey = `${d}-scripts`
           let leaks = localStorage.getItem(leaksKey)
+          let scripts = localStorage.getItem(scriptsKey)
 
-          if (leaks) return JSON.parse(leaks)
+          if (scripts) {
+            pageScripts.push({
+              page: d,
+              scripts: JSON.parse(scripts)
+            })
+          }
+
+          if (leaks) {
+            pageLeaks.push({
+              page: d,
+              leaks: JSON.parse(leaks)
+            })
+            return JSON.parse(leaks)
+          }
 
           return []
         }).filter((x) => x).flat()
         await dispatch({ type: Actions.UPDATE_LEAKS, payload: { leaks: memoryLeaks } })
+        await dispatch({ type: Actions.UPDATE_PAGE_LEAKS, payload: { page_leaks: pageLeaks } })
+        await dispatch({ type: Actions.UPDATE_PAGE_SCRIPTS, payload: { page_scripts: pageScripts } })
       }
     }
   }

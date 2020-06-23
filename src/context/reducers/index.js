@@ -23,6 +23,16 @@ const Reducer = (state = stores, action) => {
         ...state,
         leaks: action.payload.leaks
       }
+    case actions.UPDATE_PAGE_LEAKS:
+      return {
+        ...state,
+        page_leaks: action.payload.page_leaks
+      }
+    case actions.UPDATE_PAGE_SCRIPTS:
+      return {
+        ...state,
+        page_scripts: action.payload.page_scripts
+      }
     default:
       return state
   }
