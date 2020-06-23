@@ -82,7 +82,7 @@ export default function DetailAnalyze() {
   }
   const getScripts = () => {
     let pageScripts = store.page_scripts.filter(x => x.page === pageUrl())[0]
-    if (pageScripts) return pageScripts.scripts
+    if (pageScripts) return pageScripts.scripts.map(d => js_beautify(d))
 
     return []
   }
