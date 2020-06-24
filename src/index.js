@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import 'typeface-roboto';
 import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-terminal'
+import './styles/global.css'
 
 ReactDOM.render(
   <React.StrictMode>

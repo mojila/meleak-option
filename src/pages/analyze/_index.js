@@ -9,6 +9,7 @@ import moment from 'moment';
 import Chart from "react-apexcharts";
 import AceEditor from "react-ace";
 import { js_beautify } from 'js-beautify'
+import CodeReview from '../../components/codeReview';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -230,27 +231,7 @@ export default function DetailAnalyze() {
           <Grid item md={12}>
             <Card>
               <CardContent>
-                { getScripts().map((d, i) => <div key={i}>
-                  <Box display="flex" justifyContent="space-between">
-                    <Box>
-                      <Typography>
-                        Code #{i+1} Review
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Button variant="outlined">Analyze</Button>
-                    </Box>
-                  </Box>
-                  <AceEditor
-                    mode="javascript"
-                    theme="theme-terminal"
-                    width="900px"
-                    height="300px"
-                    name="UNIQUE_ID_OF_DIV"
-                    value={d}
-                    editorProps={{ $blockScrolling: true }}
-                  />
-                </div>) }
+                { getScripts().map((d, i) => <CodeReview key={i} scriptNumber={i+1} code={d} />) }
               </CardContent>
             </Card>
           </Grid>
