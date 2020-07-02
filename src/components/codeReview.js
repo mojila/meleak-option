@@ -8,13 +8,6 @@ export default function CodeReview({ code, scriptNumber }) {
   const codeAnalyze = () => {
     let newMarkers = []
 
-    newMarkers.push({
-      startRow: 4,
-      endRow: 5,
-      type: 'text',
-      className: 'replacement_marker'
-    })
-
     let lineSplit = code.split('\n')
 
     lineSplit.forEach((element, index) => {
