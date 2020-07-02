@@ -15,6 +15,21 @@ export default function CodeReview({ code, scriptNumber }) {
       className: 'replacement_marker'
     })
 
+    let lineSplit = code.split('\n')
+
+    lineSplit.forEach((element, index) => {
+      let setIntervalSyntaxs = element.search(/setInterval/gi)
+
+      if (setIntervalSyntaxs !== -1) {
+        newMarkers.push({
+          startRow: index,
+          endRow: index + 1,
+          type: 'text',
+          className: 'replacement_marker'
+        })
+      }
+    });
+
     setMarkers(newMarkers)
   }
 
