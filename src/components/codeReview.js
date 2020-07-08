@@ -14,8 +14,6 @@ export default function CodeReview({ code, scriptNumber }) {
       className: 'replacement_marker'
     }))
 
-    console.log(newMarkers)
-
     setMarkers(newMarkers)
   }
 
