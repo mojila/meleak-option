@@ -1,27 +1,20 @@
 import React, { useState } from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 import AceEditor from "react-ace";
+import codeAnalyzer from '../helpers/codeAnalyzer';
 
 export default function CodeReview({ code, scriptNumber }) {
   const [markers, setMarkers] = useState([])
 
   const codeAnalyze = () => {
-    let newMarkers = []
+    let newMarkers = codeAnalyzer(code).map(d => ({
+      startRow: d,
+      endRow: d + 1,
+      type: 'text',
+      className: 'replacement_marker'
+    }))
 
-    let lineSplit = code.split('\n')
-
-    lineSplit.forEach((element, index) => {
-      let setIntervalSyntaxs = element.search(/setInterval/gi)
-
-      if (setIntervalSyntaxs !== -1) {
-        newMarkers.push({
-          startRow: index,
-          endRow: index + 1,
-          type: 'text',
-          className: 'replacement_marker'
-        })
-      }
-    });
+    console.log(newMarkers)
 
     setMarkers(newMarkers)
   }
