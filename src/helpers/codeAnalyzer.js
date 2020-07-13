@@ -98,6 +98,45 @@ function detectSingleDataType(data) {
   return value
 }
 
+function findArrayPush(code, variables) {
+  let results = []
+
+  let filteredFromDeclarations = code.split('\n')
+  filteredFromDeclarations = filteredFromDeclarations.map(d => {
+    let declarations = false
+    
+    variables.forEach(value => {
+      if (d.search(value.declarationSyntax) >= 0) {
+        declarations = true
+      }
+    })
+
+    if (!declarations) {
+      return d
+    }
+
+    return ''
+  })
+
+  results = filteredFromDeclarations.map((d, i) => {
+    let problemSyntax = false
+
+    variables.forEach(value => {
+      if (d.search('.push') !== -1) {
+        problemSyntax = true
+      }
+    })
+    
+    if (!problemSyntax) {
+      return 0
+    } else {
+      return i
+    }
+  })
+  
+  return results
+}
+
 function detectProblemCode(code, variables) {
   let results = []
 
@@ -139,6 +178,7 @@ function detectProblemCode(code, variables) {
     }
   })
 
+  results = [...results, ...findArrayPush(code, variables)]
   results = results.filter(x => x !== 0)
 
   return results
